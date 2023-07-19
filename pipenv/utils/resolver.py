@@ -28,6 +28,7 @@ from pipenv.patched.pip._internal.utils.temp_dir import global_tempdir_manager
 from pipenv.patched.pip._vendor import pkg_resources, rich
 from pipenv.project import Project
 from pipenv.resolver import resolve_packages
+from pipenv.utils.dependencies import python_version
 from pipenv.vendor import click
 from pipenv.vendor.requirementslib.fileutils import create_tracked_tempdir, open_file
 from pipenv.vendor.requirementslib.models.requirements import Line, Requirement
@@ -583,10 +584,13 @@ class Resolver:
     @property
     def finder(self):
         if self._finder is None:
+            # Resolve packages by project's python version
+            python_versions=python_version(self.project.python())
             self._finder = get_package_finder(
                 install_cmd=self.pip_command,
                 options=self.pip_options,
                 session=self.session,
+                python_versions=python_versions
             )
         index_lookup = self.prepare_index_lookup()
         self._finder._link_collector.index_lookup = index_lookup
