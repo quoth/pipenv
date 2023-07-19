@@ -74,8 +74,7 @@ def get_package_finder(
     """Reduced Shim for compatibility to generate package finders."""
     py_version_info = None
     if python_versions:
-        py_version_info_python = max(python_versions)
-        py_version_info = tuple([int(part) for part in py_version_info_python])
+        py_version_info = tuple(int(version) for version in python_versions.split('.'))
     target_python = TargetPython(
         platforms=[platform] if platform else None,
         py_version_info=py_version_info,
